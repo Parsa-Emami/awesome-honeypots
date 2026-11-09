@@ -1,5 +1,19 @@
 # Awesome Honeypots [![Awesome Honeypots](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
+[![Repository quality](https://github.com/Parsa-Emami/awesome-honeypots/actions/workflows/quality.yml/badge.svg)](https://github.com/Parsa-Emami/awesome-honeypots/actions/workflows/quality.yml)
+
+## Maintenance and link validation
+
+This repository is a fork of [paralax/awesome-honeypots](https://github.com/paralax/awesome-honeypots). Its maintenance checks run on Python 3 with no third-party dependencies.
+
+Run `python awesome-check.py --mode local README.md README_CN.md CONTRIBUTING.md` to validate local files and heading anchors. Run `python -m unittest discover -s tests -v` for unit tests.
+
+Run `python awesome-check.py --mode external README.md README_CN.md` for a live external URL audit. HTTP access restrictions, rate limits, timeouts, and server errors are reported as *inconclusive*. Broken links fail the command; `--report-only --json-out report.json` creates a non-blocking report.
+
+GitHub Actions runs unit tests and internal-link checks on pushes and pull requests. A scheduled external audit runs every Monday at 04:17 UTC, uploads a JSON artifact, and can also be run manually in Actions.
+
+---
+
 A curated list of awesome honeypots, plus related components and much more, divided into categories such as Web, services, and others, with a focus on free and open source projects.
 
 There is no pre-established order of items in each category, the order is for contribution. If you want to contribute, please read the [guide](CONTRIBUTING.md).
@@ -457,7 +471,7 @@ Discover more awesome lists at [sindresorhus/awesome](https://github.com/sindres
 
 - Commercial honeynet
 
-  - [Cymmetria Mazerunner](ttps://cymmetria.com/products/mazerunner/) - Leads attackers away from real targets and creates a footprint of the attack.
+  - [Cymmetria Mazerunner](https://cymmetria.com/products/mazerunner/) - Leads attackers away from real targets and creates a footprint of the attack.
 
 - Server (Bluetooth)
 

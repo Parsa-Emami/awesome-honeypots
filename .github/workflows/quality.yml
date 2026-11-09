@@ -1,0 +1,56 @@
+name: Repository quality
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 4 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    name: Python tests and Markdown links
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate internal Markdown links
+        run: python awesome-check.py --mode local README.md README_CN.md CONTRIBUTING.md
+
+  external-audit:
+    name: Scheduled external link audit
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Audit external URLs
+        run: python awesome-check.py --mode external --workers 8 --timeout 8 --retries 1 --report-only --json-out external-link-report.json --summary "$GITHUB_STEP_SUMMARY" README.md README_CN.md
+      - name: Upload link report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: external-link-report
+          path: external-link-report.json
+          if-no-files-found: warn
+          retention-days: 30
