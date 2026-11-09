@@ -33,6 +33,14 @@ class LinkCheckerTests(unittest.TestCase):
         )
         self.assertEqual(len(extract_links(self.root / "README.md", self.root)), 1)
 
+    def test_ignores_inline_code_examples(self):
+        (self.root / "README.md").write_text(
+            "Example: " + chr(96) + "[PACKAGE](LINK)" + chr(96) + "\n[real](sub/page.md)\n",
+            encoding="utf-8",
+        )
+        links = extract_links(self.root / "README.md", self.root)
+        self.assertEqual([link.target for link in links], ["sub/page.md"])
+
     def test_existing_file_and_anchor(self):
         self.assertIsNone(validate_local(Link("README.md", 2, "sub/page.md#install"), self.root, {}))
 

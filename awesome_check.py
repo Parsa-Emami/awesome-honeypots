@@ -48,6 +48,7 @@ def extract_links(source: Path, root: Path) -> list[Link]:
             continue
         if in_fence:
             continue
+        line = re.sub(r"(?<!\\)(\x60+).*?\1", "", line)
         targets = [match.group(1) for match in LINK_PATTERN.finditer(line)]
         targets += [match.group(1) for match in HTML_LINK_PATTERN.finditer(line)]
         for target in targets:
